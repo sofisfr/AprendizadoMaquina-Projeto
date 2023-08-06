@@ -1,0 +1,115 @@
+---
+title: "Projeto Final"
+author: |
+        | Nome: Sofia Ferreira
+        | E-mail: sofia.f@aluno.ufabc.edu.br
+        
+        | Nome: 
+        | E-mail: 
+        
+        | Nome: 
+        | E-mail: 
+        
+        | Nome: 
+        | E-mail: 
+        
+        | Nome: 
+        | E-mail: 
+        
+        | Nome: 
+        | E-mail: 
+        | (Não é preciso informar os RAs)
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,
+                      fig.align='center',
+                      cache=TRUE,
+                      out.width = "60%",
+                      out.heigth = "60%",
+                      warning=FALSE,
+                      message=FALSE)
+options(width =70)
+```
+
+#
+
+```{r pt. 1, include=TRUE, echo=TRUE}
+
+## Introdução
+
+
+```
+
+```{r pt. 2 , include=TRUE, echo=TRUE}
+library(tidyverse)
+library(mlbench)
+library(GGally)
+
+
+data <- read.csv(
+    "Sleep_health_and_lifestyle_dataset.csv", 
+    header=TRUE, 
+    sep = ",", 
+    row.names = NULL, 
+    quote = "\"") 
+
+
+data$Gender <- as.factor(data$Gender)
+data$Occupation <- as.factor(data$Occupation)
+data$BMI.Category <- as.factor(data$BMI.Category)
+data$Blood.Pressure <- as.factor(data$Blood.Pressure)
+data$Sleep.Disorder <- as.factor(data$Sleep.Disorder)
+
+SleepData <- as_tibble(data) 
+ggpairs(SleepData, columns = c("Age", "Sleep.Duration", "Quality.of.Sleep", "Physical.Activity.Level", "Stress.Level", "Heart.Rate", "Daily.Steps"))
+
+
+```
+
+```{r pt. 3 , include=TRUE, echo=TRUE}
+
+## Explicação algoritmos
+cat("Florestas Aleatórias\n")
+
+
+cat("Florestas Aleatórias é um algoritmo de aprendizado de máquina que opera construindo uma multiplicidade de árvores de decisão durante o tempo de treinamento. É um método de aprendizado de conjunto para classificação, regressão e outras tarefas. Para tarefas de classificação, a saída do algortimo é a classe selecionada pela maioria das árvores. Florestas Aleatórias geralmente superam as árvores de decisão, mas sua precisão é menor do que as árvores impulsionadas pelo gradiente.")
+
+
+
+
+
+```
+```{r pt. 4 , include=TRUE, echo=TRUE}
+
+## Aplicação algoritmos
+
+library(rpart.plot)
+library(tidymodels)
+library(randomForest)
+
+
+set.seed(123) # para reprodutibilidade
+data_split <- initial_split(SleepData, prop = 0.8)
+train_data <- training(data_split)
+test_data <- testing(data_split)
+
+rec <- recipe(Sleep.Disorder ~ ., data = train_data) %>%
+  step_dummy(all_nominal(), -all_outcomes()) %>%
+  step_zv(all_predictors()) %>%
+  step_normalize(all_predictors())
+
+rf_model <- rand_forest(trees = 500,
+                        min_n = 5, 
+                        mtry = sqrt(ncol(train_data) - 1), 
+                        mode = "classification") %>%
+  set_engine("randomForest")
+
+set.seed(123) # para reprodutibilidade
+cv_folds <- vfold_cv(train_data, v = 10) # 10-fold cross-validation
+rf_fit_cv <- fit_resamples(rf_model, rec, resamples = cv_folds, metrics = metric_set(accuracy))
+rf_fit_cv %>% collect_metrics()
+
+```
