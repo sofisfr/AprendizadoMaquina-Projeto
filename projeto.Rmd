@@ -151,18 +151,56 @@ rec <- recipe(sleep_disorder ~ ., data = train_data) %>%
 
 ```{r pt. 5 , include=TRUE, echo=TRUE}
 
-## Explicação algoritmos
-cat("Florestas Aleatórias\n")
+cat("No desenvolvimento da análise a seguir utilizamos três algoritimos deiferentes afim de gerar uma maior abordagem em nosso conjunto de dados. São eles o algoritomo de KNN, Random Florest e o algoritimo de XGBoost.")
 
+cat("\n\nKNN - K-Nearest Neighbors\n")
 
-cat("Florestas Aleatórias é um algoritmo de aprendizado de máquina que opera construindo uma multiplicidade de árvores de decisão durante o tempo de treinamento. É um método de aprendizado de conjunto para classificação, regressão e outras tarefas. Para tarefas de classificação, a saída do algortimo é a classe selecionada pela maioria das árvores. Florestas Aleatórias geralmente superam as árvores de decisão, mas sua precisão é menor do que as árvores impulsionadas pelo gradiente.\n\n")
+cat("O KNN (K-Nearest Neighbors) é um algoritmo de aprendizado de máquina usado tanto para classificação quanto para regressão. Ele se baseia no princípio de que objetos semelhantes tendem a estar próximos uns dos outros em um espaço de características. Quando se trata de tomar decisões sobre novos pontos, o KNN considera a opinião da maioria dos pontos próximos a esses novos pontos.\n")
 
+cat("A ideia central por trás do KNN é que objetos semelhantes tendem a estar próximos uns dos outros em um espaço de características. Portanto, a classificação ou predição de um novo ponto é feita com base na maioria das classes (no caso de classificação) ou nos valores médios (no caso de regressão) dos K pontos mais próximos a ele no espaço de características.\n")
 
-cat("XGBoost - Extreme Gradient Boosting\n")
+cat("Esse método é o mais simples usado na análise dos dados desse trabalho, contudo é muito comum o mesmo ser uma primeira abordagem em um aprendizado supervisionado, pois, a principal determinação a ser feita é do seu hiperparametro K, que define a qualidade da predição feita pelo algoritimo.\n")
 
-cat("O XGBoost é uma implementação otimizada do algoritmo de gradient boosting, uma técnica que combina várias árvores de decisão fracas para formar um modelo forte. Cada árvore subsequente é treinada para corrigir os erros do modelo anterior. A combinação das previsões de todas as árvores individuais resulta em uma previsão final robusta e precisa. \n")
+cat("Passo a Passo:\n")
 
-cat("XGBoost é uma escolha sólida para problemas de classificação devido à sua eficiência, desempenho, capacidade de lidar com complexidade e regularização embutida, o que resulta em modelos mais precisos e robustos.")
+cat("Passo 1: Selecionar o número K dos vizinhos.\n")
+cat("Passo 2: Calcular a distância euclidiana dos K vizinhos.\n")
+cat("Passo 3: Selecionar os K vizinhos mais próximos de acordo com a distância euclidiana calculada.\n")
+cat("Passo 4: Entre esses K vizinhos, contar o número de pontos de dados em cada categoria.\n")
+cat("Passo 5: Atribuir os novos pontos de dados à categoria para a qual o número de vizinhos é máximo.\n")
+
+cat("\n\nFlorestas Aleatórias\n")
+
+cat("Florestas Aleatórias é um algoritmo de aprendizado de máquina que opera construindo uma multiplicidade de árvores de decisão durante o tempo de treinamento. É um método de aprendizado de conjunto para classificação, regressão e outras tarefas. Para tarefas de classificação, a saída do algortimo é a classe selecionada pela maioria das árvores. Florestas Aleatórias geralmente superam as árvores de decisão, mas sua precisão é menor do que as árvores impulsionadas pelo gradiente.\n")
+
+cat("A ideia principal por trás do algoritmo Random Forest é combinar a sabedoria coletiva de múltiplas árvores de decisão para melhorar a precisão e a robustez das previsões. Ele se baseia em dois conceitos principais: diversidade e média ponderada.\n")
+
+cat("Passo a Passo:\n")
+
+cat("Passo 1: Selecionar K pontos de dados aleatórios do conjunto de treinamento.\n")
+cat("Passo 2: Construir as árvores de decisão associadas aos pontos de dados selecionados (Subconjuntos).\n")
+cat("Passo 3: Escolher o número N para as árvores de decisão que você deseja construir.\n")
+cat("Passo 4: Repetir os Passos 1 e 2.\n")
+cat("Passo 5: Para novos pontos de dados, encontrar as previsões de cada árvore de decisão e atribuir os novos pontos de dados à categoria que vencer a maioria dos votos.\n")
+
+cat("\n\nXGBoost - Extreme Gradient Boosting\n")
+
+cat("Extreme Gradient Boosting (XGBoost) é um algoritmo de aprendizado de máquina amplamente utilizado para tarefas de regressão e classificação. Ele é uma extensão do algoritmo de boosting tradicional, projetado para melhorar a eficácia e eficiência do boosting, especialmente em termos de desempenho e velocidade de treinamento.\n")
+
+cat("O boosting mencionado acima é uma técnica de aprendizado de máquina em que vários modelos fracos (geralmente árvores de decisão rasas) são treinados sequencialmente, cada um corrigindo os erros do modelo anterior. Os modelos fracos são combinados para criar um modelo forte que é mais capaz de fazer previsões precisas.\n")
+
+cat("Portanto em resumo, o XGBoost é uma implementação otimizada do algoritmo de gradient boosting, uma técnica que combina várias árvores de decisão fracas para formar um modelo forte. Cada árvore subsequente é treinada para corrigir os erros do modelo anterior. A combinação das previsões de todas as árvores individuais resulta em uma previsão final robusta e precisa.\n")
+
+cat("O XGBoost é uma escolha sólida para problemas de classificação devido à sua eficiência, desempenho, capacidade de lidar com complexidade e regularização embutida, o que resulta em modelos mais precisos e robustos.\n")
+
+cat("Passo a Passo:\n")
+
+cat("Passo 1: Comece com um modelo básico, como uma árvore de decisão.\n")
+cat("Passo 2: Treine o modelo para aprender com os erros que comete.\n")
+cat("Passo 3: Adicione mais modelos simples e foque nos erros anteriores.\n")
+cat("Passo 4: Repita o treinamento e adição de modelos várias vezes.\n")
+cat("Passo 5: Combine as respostas de todos os modelos para a decisão final.\n")
+
 ```
 
 
