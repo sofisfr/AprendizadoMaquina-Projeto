@@ -7,8 +7,8 @@ author: |
         | Nome: Pedro Henrique Donassan de Macedo
         | E-mail: pedro.donassan@aluno.ufabc.edu.br
         
-        | Nome: 
-        | E-mail: 
+        | Nome: Lucas Gonçalves de Oliveira 
+        | E-mail: goncalves.o@aluno.ufabc.edu.br
         
         | Nome: 
         | E-mail: 
@@ -40,6 +40,13 @@ options(width =70)
 
 ## Introdução
 
+cat("1. Introdução\n\n")
+
+
+cat("Em nosso mundo moderno acelerado e exigente, a importância da saúde do sono e seu profundo impacto em nosso bem-estar geral não podem ser exagerados. Isso por conta que o sono é um processo fisiológico fundamental que desempenha um papel vital na manutenção do equilíbrio físico, mental e emocional. \n
+A qualidade e a quantidade do nosso sono influenciam diretamente nosso funcionamento diário, habilidades cognitivas, resiliência emocional e até mesmo nossa saúde a longo prazo. À medida que nos aprofundamos na intrincada relação entre saúde do sono e estilo de vida, descobrimos uma teia de fatores que contribuem para um sono reparador e exploramos como as escolhas de estilo de vida podem melhorar ou prejudicar a qualidade do nosso sono. \n
+Logo, essa exploração abrange não apenas a ciência do sono, mas também os hábitos, rotinas e escolhas que coletivamente formam a base de nossa saúde durante o sono. Do ambiente de sono que criamos aos hábitos que cultivamos, entender a conexão simbiótica entre sono e estilo de vida nos capacita a tomar decisões informadas que podem levar a um melhor bem-estar e maior qualidade de vida.
+\n")
 
 ```
 
@@ -51,13 +58,27 @@ library(GGally)
 library(corrplot)
 library(vip)
 library(janitor)
-
 library(rpart.plot)
 library(randomForest)
 ```
 
-
 ```{r pt. 2 , include=TRUE, echo=TRUE}
+cat("2. Exploração do Dataset\n\n")
+
+
+cat("Seguindo o contexto da introdução apresentada anteriormente, o dataset escolhido para o desenvolvimento deste projeto  apresenta  um total de 400 linhas e 13 colunas com uma ampla gama de variáveis relacionadas ao sono e aos hábitos diários. Dentre os parâmetros, estão inclusos alguns como sexo, idade, ocupação, duração do sono, qualidade do sono, nível de atividade física, níveis de estresse, categoria de IMC, pressão arterial, frequência cardíaca, passos diários e presença ou ausência de distúrbios do sono.\n")
+
+
+cat("A obtenção dos dados foi através da plataforma https://www.kaggle.com/datasets
+link: https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset")
+```
+
+```{r pt. 3 , include=TRUE, echo=TRUE}
+cat("Em um primeiro momento, a partir da leitura do arquivo em CSV obtido da plataforma Kaggle, é realizada a formatação dos nomes das colunas, separa a coluna de pressão sanguínea em duas colunas numéricas (pressão sistólica e diastólica) e converte várias colunas em fatores. Em seguida, ele cria um tibble a partir dos dados e usa a função `ggpairs` para criar uma matriz de gráficos de dispersão das colunas especificadas. Finalmente, ele remove quaisquer linhas com valores ausentes, seleciona apenas as colunas numéricas, calcula a matriz de correlação e a visualiza usando a função `corrplot`.
+
+O resultado da função `ggpairs` é uma matriz de gráficos de dispersão que mostra as relações entre pares das colunas especificadas. Cada célula na matriz exibe um gráfico de dispersão de duas variáveis, com uma variável no eixo x e outra no eixo y. As células diagonais mostram histogramas de cada variável. Este gráfico pode ajudá-lo a explorar visualmente as relações entre as variáveis e identificar quaisquer padrões ou tendências.
+
+O resultado da função `corrplot` é uma visualização da matriz de correlação. A matriz de correlação mostra os coeficientes de correlação entre pares de todas as variáveis numéricas no conjunto de dados. A função `corrplot` cria uma exibição gráfica desta matriz, onde cada célula representa a correlação entre duas variáveis. A cor e o tamanho de cada célula indicam a força e a direção da correlação: azul para correlações positivas, vermelho para correlações negativas e branco para nenhuma correlação. Quanto mais próxima uma célula estiver do azul brilhante ou do vermelho brilhante, mais forte será a correlação. Este gráfico pode ajudá-lo a identificar rapidamente quais variáveis estão fortemente correlacionadas entre si.")
 
 data <- read.csv(
     "Sleep_health_and_lifestyle_dataset.csv", 
@@ -79,12 +100,32 @@ data$bmi_category <- as.factor(data$bmi_category)
 data$sleep_disorder <- as.factor(data$sleep_disorder)
 
 SleepData <- as_tibble(data) 
-ggpairs(SleepData, columns = c("age", "sleep_duration", "quality_of_sleep", "physical_activity_level", "stress_level", "heart_rate", "daily_steps", "systolic_pressure", "diastolic_pressure"))
 
+g <- ggpairs(
+  data = SleepData,
+  columns = c("age", "sleep_duration", "quality_of_sleep", "physical_activity_level", "stress_level", "heart_rate", "daily_steps", "systolic_pressure", "diastolic_pressure"),
+  title = "quality_of_sleep",
+  upper = list(continuous = wrap("cor", size = 3), 
+               combo = "box_no_facet", 
+               discrete = "facetbar", 
+               na = "na"),
+  lower = list(continuous = "points", 
+               combo = "facethist", 
+               discrete = "facetbar", 
+               na = "na"),
+  diag = list(continuous = "densityDiag", 
+              discrete = "barDiag",
+              na = "naDiag"),
+  axisLabels = c("show", "internal", "none")
+)
 
-data %>% na.omit() %>% select_if(is.numeric) %>% cor() %>% corrplot::corrplot(tl.cex = 0.5) #Printando matriz de correlação
+cat(g, vp=viewport(angle=90, width = unit(4.5, "inches"), height = unit(4.5, "inches")))
+
+data %>% na.omit() %>% select_if(is.numeric) %>% cor() %>% corrplot::corrplot(tl.cex = 0.5) 
+
+#Printando matriz de correlação
 ```
-```{r}
+```{r  pt. 4 , include=TRUE, echo=TRUE}
 
 #Split para todos os modelos
 set.seed(123) # para reprodutibilidade
@@ -106,7 +147,7 @@ rec <- recipe(sleep_disorder ~ ., data = train_data) %>%
 
 ```
 
-```{r pt. 3 , include=TRUE, echo=TRUE}
+```{r pt. 5 , include=TRUE, echo=TRUE}
 
 ## Explicação algoritmos
 cat("Florestas Aleatórias\n")
@@ -121,7 +162,10 @@ cat("O XGBoost é uma implementação otimizada do algoritmo de gradient boostin
 
 cat("XGBoost é uma escolha sólida para problemas de classificação devido à sua eficiência, desempenho, capacidade de lidar com complexidade e regularização embutida, o que resulta em modelos mais precisos e robustos.")
 ```
-```{r pt. 4 , include=TRUE, echo=TRUE}
+
+
+
+```{r pt. 6 , include=TRUE, echo=TRUE}
 
 ## Aplicação dos algoritmos
 
