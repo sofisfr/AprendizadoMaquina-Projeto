@@ -76,11 +76,14 @@ link: https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-data
 ```
 
 ```{r pt. 3 , include=TRUE, echo=TRUE}
-cat("Em um primeiro momento, a partir da leitura do arquivo em CSV obtido da plataforma Kaggle, é realizada a formatação dos nomes das colunas, separa a coluna de pressão sanguínea em duas colunas numéricas (pressão sistólica e diastólica) e converte várias colunas em fatores. Em seguida, ele cria um tibble a partir dos dados e usa a função `ggpairs` para criar uma matriz de gráficos de dispersão das colunas especificadas. Finalmente, ele remove quaisquer linhas com valores ausentes, seleciona apenas as colunas numéricas, calcula a matriz de correlação e a visualiza usando a função `corrplot`.
+cat("Em um primeiro momento, a partir da leitura do arquivo em CSV obtido da plataforma Kaggle, é realizada a formatação dos nomes das colunas e a transformação das colunas necessárias para o tipo “fator”, além disso separamos a coluna de pressão sanguínea em duas colunas numéricas (pressão sistólica e diastólica). Para um melhor entendimentos das variáveis do dataset, usamos duas funções, “ggpairs” e “corrplot”, para o estudo da correlação entre as variáveis preditoras e a variável de interesse, a qualidade de sono.  \n
 
-O resultado da função `ggpairs` é uma matriz de gráficos de dispersão que mostra as relações entre pares das colunas especificadas. Cada célula na matriz exibe um gráfico de dispersão de duas variáveis, com uma variável no eixo x e outra no eixo y. As células diagonais mostram histogramas de cada variável. Este gráfico pode ajudá-lo a explorar visualmente as relações entre as variáveis e identificar quaisquer padrões ou tendências.
+A aplicação da função “ggpairs” foi utilizada para preparação dos dados, onde a sua saída representa uma matriz de gráficos de dispersão que mostra as relações entre pares das colunas especificadas. Cada célula na matriz exibe um gráfico de dispersão de duas variáveis, que no caso serão exibidos durante as análises, com uma variável no eixo x e outra no eixo y e as células diagonais mostram histogramas de cada variável.\n
 
-O resultado da função `corrplot` é uma visualização da matriz de correlação. A matriz de correlação mostra os coeficientes de correlação entre pares de todas as variáveis numéricas no conjunto de dados. A função `corrplot` cria uma exibição gráfica desta matriz, onde cada célula representa a correlação entre duas variáveis. A cor e o tamanho de cada célula indicam a força e a direção da correlação: azul para correlações positivas, vermelho para correlações negativas e branco para nenhuma correlação. Quanto mais próxima uma célula estiver do azul brilhante ou do vermelho brilhante, mais forte será a correlação. Este gráfico pode ajudá-lo a identificar rapidamente quais variáveis estão fortemente correlacionadas entre si.")
+
+Já a função “corrplot”, representa uma matriz de correlação que mostra os coeficientes de correlação entre pares de todas as variáveis numéricas no conjunto de dados. Cada célula representa a correlação entre duas variáveis, a cor azul indica uma correlação positiva, e a cor vermelha indica correlação negativa, a cor branca indica que não há correlação. Quanto maior o tamanho mais forte será a correlação. De acordo com a matriz resultante, a variável “sleep_duration” tem forte relação positiva com a qualidade do sono, enquanto as variáveis “stress_level” e “heart_rate” afetam negativamente a qualidade do sono.\n
+
+")
 
 data <- read.csv(
     "Sleep_health_and_lifestyle_dataset.csv", 
@@ -171,7 +174,7 @@ cat("Passo 5: Atribuir os novos pontos de dados à categoria para a qual o núme
 
 cat("\n\nFlorestas Aleatórias\n")
 
-cat("Florestas Aleatórias é um algoritmo de aprendizado de máquina que opera construindo uma multiplicidade de árvores de decisão durante o tempo de treinamento. É um método de aprendizado de conjunto para classificação, regressão e outras tarefas. Para tarefas de classificação, a saída do algortimo é a classe selecionada pela maioria das árvores. Florestas Aleatórias geralmente superam as árvores de decisão, mas sua precisão é menor do que as árvores impulsionadas pelo gradiente.\n")
+cat("Florestas Aleatórias é um algoritmo de aprendizado de máquina que opera construindo uma multiplicidade de árvores de decisão durante o tempo de treinamento. É um método de aprendizado de conjunto para classificação, regressão e outras tarefas. Para tarefas de classificação, a saída do algoritimo é a classe selecionada pela maioria das árvores. Florestas Aleatórias geralmente superam as árvores de decisão, mas sua precisão é menor do que as árvores impulsionadas pelo gradiente.\n")
 
 cat("A ideia principal por trás do algoritmo Random Forest é combinar a sabedoria coletiva de múltiplas árvores de decisão para melhorar a precisão e a robustez das previsões. Ele se baseia em dois conceitos principais: diversidade e média ponderada.\n")
 
