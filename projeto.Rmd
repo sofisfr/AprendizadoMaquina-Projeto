@@ -10,11 +10,11 @@ author: |
         | Nome: Lucas Gonçalves de Oliveira 
         | E-mail: goncalves.o@aluno.ufabc.edu.br
         
-        | Nome: 
-        | E-mail: 
+        | Nome: Ricardo de Oliveira Carracci
+        | E-mail: ricardo.carracci@aluno.ufabc.edu.br 
         
-        | Nome: 
-        | E-mail: 
+        | Nome: Micael Lucas da Silva
+        | E-mail: micael.lucas@aluno.ufabc.edu.br
         
         | Nome: 
         | E-mail: 
@@ -60,6 +60,8 @@ library(vip)
 library(janitor)
 library(rpart.plot)
 library(randomForest)
+library(class)
+library(caret)
 ```
 
 ```{r pt. 2 , include=TRUE, echo=TRUE}
@@ -168,6 +170,29 @@ cat("XGBoost é uma escolha sólida para problemas de classificação devido à 
 ```{r pt. 6 , include=TRUE, echo=TRUE}
 
 ## Aplicação dos algoritmos
+
+################ KNN #########################
+
+trControl <- trainControl(method  = "cv",
+                          number  = 5)
+
+fit <- train(sleep_disorder ~ .,
+             method     = "knn",
+             tuneGrid   = expand.grid(k = 1:10),
+             trControl  = trControl,
+             metric     = "Accuracy",
+             data       = train_data)
+
+fit
+
+test_pred <- knn(
+  train_data[,c("sleep_duration","systolic_pressure","diastolic_pressure")], 
+  test_data[,c("sleep_duration","systolic_pressure","diastolic_pressure")],
+  train_data$sleep_disorder, 
+  k=1
+)
+
+table(test_data$sleep_disorder, test_pred)
 
 ################ Random Forest #########################
 
