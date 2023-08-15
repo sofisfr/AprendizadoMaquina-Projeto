@@ -104,6 +104,8 @@ data$bmi_category <- as.factor(data$bmi_category)
 #data$blood_pressure <- as.factor(data$blood_pressure)
 data$sleep_disorder <- as.factor(data$sleep_disorder)
 
+data$quality_of_sleep <- as.factor(data$quality_of_sleep)
+
 SleepData <- as_tibble(data) 
 
 g <- ggpairs(
@@ -123,8 +125,7 @@ g <- ggpairs(
               na = "naDiag"),
   axisLabels = c("show", "internal", "none")
 )
-
-cat(g, vp=viewport(angle=90, width = unit(4.5, "inches"), height = unit(4.5, "inches")))
+g + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 
 data %>% na.omit() %>% select_if(is.numeric) %>% cor() %>% corrplot::corrplot(tl.cex = 0.5) 
 
@@ -208,32 +209,56 @@ cat("Passo 5: Combine as respostas de todos os modelos para a decisão final.\n"
 
 
 
+
 ```{r pt. 6 , include=TRUE, echo=TRUE}
 
 ## Aplicação dos algoritmos
 
 ################ KNN #########################
 
-trControl <- trainControl(method  = "cv",
-                          number  = 5)
 
-fit <- train(sleep_disorder ~ .,
-             method     = "knn",
-             tuneGrid   = expand.grid(k = 1:10),
-             trControl  = trControl,
-             metric     = "Accuracy",
-             data       = train_data)
+roda_knn <- function( k ){
+# Preparando o modelo
+knn.model <- nearest_neighbor( neighbors = k
+            , weight_func = "rectangular"
+            , dist_power = 2
+) %>%
+set_engine("kknn") %>%
+set_mode("classification")
 
-fit
 
-test_pred <- knn(
-  train_data[,c("sleep_duration","systolic_pressure","diastolic_pressure")], 
-  test_data[,c("sleep_duration","systolic_pressure","diastolic_pressure")],
-  train_data$sleep_disorder, 
-  k=1
+# Treinando o modelo
+knn.fit <- knn.model %>%
+fit( quality_of_sleep ~ ., data = train_data )
+# Testando o modelo
+acc <- knn.fit %>%
+predict( new_data = test_data ) %>%
+bind_cols( test_data ) %>%
+accuracy(quality_of_sleep,.pred_class) %>%
+pull(.estimate)
+# Colocando em uma tabela para ficar bonito
+df.err <- tibble( k = k
+# erro é 1 - acurácia
+, erro = 1 - acc
 )
+# Retornando a tabela com o erro
+return(df.err)
+}
 
-table(test_data$sleep_disorder, test_pred)
+library(purrr)
+df_erros <- map_dfr( 1:40, roda_knn )
+
+df_erros_organized <- df_erros %>%
+arrange(erro)
+
+df_erros_organized
+
+cat("Organizando o dataframe em ordem ascendente de erro, identificamos que os melhores k's para o modelo de classificação estão na faixa de 5 a 8 com um erro de 0.4")
+
+ ggplot(df_erros) +
+aes( x = k, y = erro ) +
+geom_line() +
+geom_point( x = 5, y = df_erros$erro[5], color ="red" )
 
 ################ Random Forest #########################
 
